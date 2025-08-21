@@ -427,6 +427,62 @@
             transition: width 0.3s ease;
         }
 
+        /* --- LOADING OVERLAY STYLES START --- */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            /* Faint background */
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(5px);
+            transition: opacity 0.3s ease;
+        }
+
+        .loading-overlay.hidden {
+            display: none;
+        }
+
+        .spinner {
+            border: 8px solid rgba(255, 255, 255, 0.3);
+            border-top: 8px solid #4A90E2;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
+        }
+
+        .loading-text {
+            color: #FFFFFF;
+            font-size: 1.5rem;
+            font-weight: 500;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* This class will be added to the container to prevent interaction */
+        .no-click {
+            pointer-events: none;
+        }
+
+        /* --- LOADING OVERLAY STYLES END --- */
+
+
         @media (max-width: 768px) {
             .container {
                 padding: 10px;
@@ -539,64 +595,433 @@
         </div>
     </div>
 
+    <!-- Loading Overlay -->
+    <div id="loading-overlay" class="loading-overlay hidden">
+        <div class="spinner"></div>
+        <div class="loading-text">Loading...</div>
+    </div>
+
+
     <script>
         // Sample questions data
         const questionsData = {
             beginner: [
                 {
-                    question: "What does HTML stand for?",
-                    options: ["Hyper Text Markup Language", "High Tech Modern Language", "Home Tool Markup Language", "Hyperlink and Text Markup Language"],
-                    correct: 0
-                },
-                {
-                    question: "Which HTML tag is used for the largest heading?",
-                    options: ["<h6>", "<h1>", "<header>", "<head>"],
+                    question: "A patient with liver failure is prescribed lactulose. How does lactulose reduce ammonia absorption in the GI tract?",
+                    options: [
+                        "Enhances protein digestion",
+                        "Traps ammonia by converting it to polar ammonium",
+                        "Inhibits urease enzyme in the liver",
+                        "Increases glutamine synthesis"
+                    ],
                     correct: 1
                 },
                 {
-                    question: "What does CSS stand for?",
-                    options: ["Computer Style Sheets", "Creative Style Sheets", "Cascading Style Sheets", "Colorful Style Sheets"],
+                    question: "An elderly patient on warfarin starts taking a sulfonamide antibiotic. A few days later, he experiences bleeding. What is the most likely mechanism?",
+                    options: [
+                        "Sulfonamide reduces warfarin metabolism",
+                        "Sulfonamide displaces warfarin from albumin binding sites",
+                        "Warfarin increases sulfonamide elimination",
+                        "Sulfonamide increases clotting factors"
+                    ],
+                    correct: 1
+                },
+                {
+                    question: "A patient on oral contraceptives starts rifampin for tuberculosis. She becomes pregnant. What best explains this outcome?",
+                    options: [
+                        "Rifampin decreased GI absorption of the contraceptive",
+                        "Rifampin induced CYP450 enzymes, increasing contraceptive metabolism",
+                        "Rifampin inhibited contraceptive binding to albumin",
+                        "Rifampin enhanced renal reabsorption of the contraceptive"
+                    ],
+                    correct: 1
+                },
+                {
+                    question: "A patient develops lupus-like symptoms after taking hydralazine. Genetic testing reveals he's a slow acetylator. This is most likely due to impaired:",
+                    options: [
+                        "Oxidation via CYP3A4",
+                        "Renal excretion",
+                        "Acetylation via N-acetyltransferase",
+                        "Hydrolysis via esterases"
+                    ],
                     correct: 2
                 },
                 {
-                    question: "Which symbol is used to select an ID in CSS?",
-                    options: [".", "#", "*", "&"],
+                    question: "An ICU patient with heart failure is given a loading dose of digoxin. Why is a loading dose necessary?",
+                    options: [
+                        "Digoxin is metabolized quickly",
+                        "Digoxin has a short half-life",
+                        "To rapidly reach therapeutic plasma concentration due to long half-life",
+                        "To bypass hepatic metabolism"
+                    ],
+                    correct: 2
+                },
+                {
+                    question: "Which receptor is associated with Gs protein activation and increased cAMP production?",
+                    options: [
+                        "α2-adrenergic receptor",
+                        "β1-adrenergic receptor",
+                        "M2-muscarinic receptor",
+                        "H1-histamine receptor"
+                    ],
                     correct: 1
                 },
                 {
-                    question: "What is the correct way to comment in HTML?",
-                    options: ["// comment", "/* comment */", "<!-- comment -->", "# comment"],
+                    question: "A drug enhances GABA’s effect on GABA-A receptors but has no effect alone. This is best described as:",
+                    options: [
+                        "Partial agonist",
+                        "Inverse agonist",
+                        "Competitive antagonist",
+                        "Positive allosteric modulator"
+                    ],
+                    correct: 3
+                },
+                {
+                    question: "A myasthenia gravis patient is given excessive neostigmine and presents with bradycardia, miosis, and diarrhea. What is the mechanism?",
+                    options: [
+                        "Nicotinic receptor desensitization",
+                        "Excess acetylcholine at muscarinic receptors",
+                        "GABA receptor overstimulation",
+                        "Inhibition of catecholamine reuptake"
+                    ],
+                    correct: 1
+                },
+                {
+                    question: "Which drug acts through a nuclear receptor to regulate gene expression of sodium channels in the collecting duct?",
+                    options: ["Acetylcholine", "Aldosterone", "Norepinephrine", "Glucagon"],
+                    correct: 1
+                },
+                {
+                    question: "A drug has a half-life of 24 hours. How long will it take to reach ~94% of steady-state plasma concentration?",
+                    options: ["2 days", "8 days", "5 days", "7 days"],
+                    correct: 2
+                },
+                {
+                    question: "A 60-year-old man is diagnosed with open-angle glaucoma. His ophthalmologist prescribes timolol (beta-1 blocker) eye drops. What is the mechanism by which timolol reduces intraocular pressure?",
+                    options: [
+                        "Increases uveoscleral outflow via ciliary muscle relaxation",
+                        "Enhances aqueous humor drainage via the Canal of Schlemm",
+                        "Decreases aqueous humor production by blocking β-receptors in ciliary epithelium",
+                        "Constricts the pupil to open the trabecular meshwork"
+                    ],
+                    correct: 2
+                },
+                {
+                    question: "A patient with undiagnosed closed-angle glaucoma receives atropine during a routine eye exam and soon develops severe eye pain and blurred vision. What is the most likely cause?",
+                    options: [
+                        "Inhibition of aqueous humor production",
+                        "Constriction of the pupil increases intraocular pressure",
+                        "Atropine causes mydriasis, which narrows the iridocorneal angle",
+                        "Excess lacrimation leads to pressure buildup"
+                    ],
+                    correct: 2
+                },
+                {
+                    question: "Brimonidine, an α2-adrenergic agonist, is sometimes used in glaucoma treatment. How does it reduce intraocular pressure?",
+                    options: [
+                        "Stimulates aqueous humor production",
+                        "Inhibits norepinephrine reuptake, increasing outflow",
+                        "Decreases aqueous humor production by reducing cAMP in ciliary epithelium",
+                        "Contracts the radial muscles of the iris"
+                    ],
+                    correct: 2
+                },
+                {
+                    question: "A patient receives salbutamol for acute asthma. He complains of hand tremors. What is the most likely cause?",
+                    options: [
+                        "Activation of β1-receptors in the heart",
+                        "Stimulation of β2-receptors in skeletal muscle",
+                        "Inhibition of MAO in the liver",
+                        "Muscarinic receptor blockade"
+                    ],
+                    correct: 1
+                },
+                {
+                    question: "Which drug is used in Alzheimer’s disease to enhance cholinergic transmission in the CNS by inhibiting acetylcholinesterase?",
+                    options: ["Oxybutynin", "Donepezil", "Atropine", "Scopolamine"],
+                    correct: 1
+                },
+                {
+                    question: "A Parkinson’s patient develops tremors and rigidity. He is prescribed benztropine. What is the rationale?",
+                    options: [
+                        "Enhances dopamine production",
+                        "Blocks acetylcholine in the striatum to reduce imbalance",
+                        "Inhibits MAO-B",
+                        "Stimulates muscarinic receptors"
+                    ],
+                    correct: 1
+                },
+                {
+                    question: "An elderly woman is treated for urinary urgency. She is given Darifenacin. Which receptor is being blocked?",
+                    options: [
+                        "α1-adrenergic receptor",
+                        "M1 muscarinic receptor",
+                        "M3 muscarinic receptor",
+                        "β3-adrenergic receptor"
+                    ],
+                    correct: 2
+                },
+                {
+                    question: "A pregnant woman with premature contractions is given terbutaline. Which receptor does this drug act on to relax uterine smooth muscle?",
+                    options: [
+                        "α1-adrenergic",
+                        "β1-adrenergic",
+                        "β2-adrenergic",
+                        "M3-muscarinic"
+                    ],
+                    correct: 2
+                },
+                {
+                    question: "A patient undergoing radiation for head and neck cancer develops dry mouth (xerostomia). Which drug may help by stimulating salivary secretion?",
+                    options: ["Atropine", "Pilocarpine", "Ipratropium", "Tropicamide"],
+                    correct: 1
+                },
+                {
+                    question: "A patient with severe constipation is prescribed bethanechol. What is the likely mechanism?",
+                    options: [
+                        "Muscarinic receptor blockade",
+                        "Activation of β2 receptors in intestinal smooth muscle",
+                        "Stimulation of M3 receptors promoting peristalsis",
+                        "Inhibition of norepinephrine release"
+                    ],
+                    correct: 2
+                },
+                {
+                    question: "A man taking nitroglycerin for angina also uses sildenafil. He experiences sudden hypotension. What is the reason for this severe drop in blood pressure?",
+                    options: [
+                        "Both drugs decrease norepinephrine release",
+                        "Additive cAMP-mediated vasodilation",
+                        "Excessive cGMP accumulation due to combined NO and PDE-5 inhibition",
+                        "Increased cardiac output due to synergism"
+                    ],
                     correct: 2
                 }
             ],
+
             intermediate: [
                 {
-                    question: "What is the purpose of the 'use strict' directive in JavaScript?",
-                    options: ["To enable strict type checking", "To enforce stricter parsing and error handling", "To improve performance", "To enable ES6 features"],
+                    question: "Nitroglycerin relieves angina mainly by:",
+                    options: [
+                        "Increasing heart contractility",
+                        "Dilating veins to reduce preload",
+                        "Blocking calcium channels",
+                        "Blocking β1 receptors"
+                    ],
                     correct: 1
                 },
                 {
-                    question: "Which method is used to add an element to the end of an array in JavaScript?",
-                    options: ["append()", "add()", "push()", "insert()"],
-                    correct: 2
-                },
-                {
-                    question: "What is the difference between '==' and '===' in JavaScript?",
-                    options: ["No difference", "== checks type, === doesn't", "=== checks type and value, == only checks value", "=== is faster"],
-                    correct: 2
-                },
-                {
-                    question: "Which CSS property is used to create flexbox layouts?",
-                    options: ["display: flex", "layout: flex", "flex: true", "position: flex"],
+                    question: "Which drug reduces afterload through arterial vasodilation?",
+                    options: ["Hydralazine", "Digoxin", "Spironolactone", "Furosemide"],
                     correct: 0
                 },
                 {
-                    question: "What is the purpose of the async/await keywords in JavaScript?",
-                    options: ["To handle synchronous operations", "To handle asynchronous operations more elegantly", "To speed up code execution", "To create loops"],
+                    question: "Beta-blockers help in stable angina mainly by:",
+                    options: [
+                        "Increasing oxygen supply",
+                        "Decreasing heart rate and contractility",
+                        "Dilating coronary arteries directly",
+                        "Stimulating α1 receptors"
+                    ],
+                    correct: 1
+                },
+                {
+                    question: "Why are β-blockers contraindicated in Prinzmetal’s angina?",
+                    options: [
+                        "They reduce preload",
+                        "They increase coronary vasospasm",
+                        "They cause hypotension",
+                        "They reduce oxygen demand"
+                    ],
+                    correct: 1
+                },
+                {
+                    question: "Amiodarone is classified as:",
+                    options: ["Class I", "Class II", "Class III", "Class IV"],
+                    correct: 2
+                },
+                {
+                    question: "Verapamil is used in atrial fibrillation because it:",
+                    options: [
+                        "Blocks potassium channels",
+                        "Blocks calcium channels in AV node",
+                        "Blocks sodium channels",
+                        "Activates β2 receptors"
+                    ],
+                    correct: 1
+                },
+                {
+                    question: "Which antiarrhythmic can cause torsades de pointes?",
+                    options: ["Quinidine", "Propranolol", "Lidocaine", "Amiodarone"],
+                    correct: 0
+                },
+                {
+                    question: "A patient with asthma should avoid which antihypertensive?",
+                    options: ["Propranolol", "Amlodipine", "Lisinopril", "Losartan"],
+                    correct: 0
+                },
+                {
+                    question: "Which drug causes dry cough as a side effect?",
+                    options: ["Losartan", "Lisinopril", "Amlodipine", "Atenolol"],
+                    correct: 1
+                },
+                {
+                    question: "Which calcium channel blocker is used mainly for hypertension?",
+                    options: ["Amlodipine", "Verapamil", "Diltiazem", "Propranolol"],
+                    correct: 0
+                },
+                {
+                    question: "In hypertensive emergency, the IV drug of choice is:",
+                    options: ["Nitroprusside", "Hydrochlorothiazide", "Losartan", "Spironolactone"],
+                    correct: 0
+                },
+                {
+                    question: "In a diabetic hypertensive patient, which drug class is preferred?",
+                    options: ["ACE inhibitors", "Beta-blockers", "Thiazides", "Alpha-blockers"],
+                    correct: 0
+                },
+                {
+                    question: "Which drug improves survival in HF by blocking β1 and α1 receptors?",
+                    options: ["Atenolol", "Carvedilol", "Propranolol", "Esmolol"],
+                    correct: 1
+                },
+                {
+                    question: "Which diuretic is most effective for reducing pulmonary edema in HF?",
+                    options: ["Furosemide", "Hydrochlorothiazide", "Spironolactone", "Amiloride"],
+                    correct: 0
+                },
+                {
+                    question: "Digoxin is used in HF mainly because it:",
+                    options: [
+                        "Increases preload",
+                        "Increases contractility via Na⁺/K⁺-ATPase inhibition",
+                        "Reduces afterload",
+                        "Blocks β1 receptors"
+                    ],
+                    correct: 1
+                },
+                {
+                    question: "Which aldosterone antagonist improves survival in HF?",
+                    options: ["Amiloride", "Spironolactone", "Furosemide", "Hydrochlorothiazide"],
+                    correct: 1
+                },
+                {
+                    question: "Thiazide diuretics act mainly in:",
+                    options: [
+                        "Proximal tubule",
+                        "Loop of Henle",
+                        "Distal convoluted tubule",
+                        "Collecting duct"
+                    ],
+                    correct: 2
+                },
+                {
+                    question: "Furosemide acts on which transporter?",
+                    options: [
+                        "Na⁺/K⁺/2Cl⁻ cotransporter",
+                        "Na⁺/Cl⁻ symporter",
+                        "Na⁺/K⁺ ATPase",
+                        "Aquaporins"
+                    ],
+                    correct: 0
+                },
+                {
+                    question: "Which diuretic is potassium-sparing?",
+                    options: ["Hydrochlorothiazide", "Spironolactone", "Furosemide", "Mannitol"],
+                    correct: 1
+                },
+                {
+                    question: "Mannitol is contraindicated in:",
+                    options: ["Cerebral edema", "Glaucoma", "CHF", "Acute renal failure"],
+                    correct: 2
+                },
+                {
+                    question: "Statins reduce LDL by inhibiting:",
+                    options: [
+                        "HMG-CoA reductase",
+                        "LDL receptors",
+                        "Cholesterol ester transfer",
+                        "Lipoprotein lipase"
+                    ],
+                    correct: 0
+                },
+                {
+                    question: "Which drug increases HDL significantly?",
+                    options: ["Niacin", "Statins", "Fibrates", "Ezetimibe"],
+                    correct: 0
+                },
+                {
+                    question: "Fibrates mainly reduce:",
+                    options: ["Triglycerides", "HDL", "LDL", "VLDL only"],
+                    correct: 0
+                },
+                {
+                    question: "Ezetimibe lowers cholesterol by:",
+                    options: [
+                        "Inhibiting absorption from intestine",
+                        "Blocking VLDL secretion",
+                        "Increasing LDL receptor synthesis",
+                        "Blocking bile acid recycling"
+                    ],
+                    correct: 0
+                },
+                {
+                    question: "Aspirin prevents platelet aggregation by inhibiting:",
+                    options: ["Thrombin", "COX-1 and TXA2 synthesis", "ADP receptor", "GP IIb/IIIa"],
+                    correct: 1
+                },
+                {
+                    question: "Clopidogrel acts by:",
+                    options: [
+                        "Inhibiting ADP receptor (P2Y12)",
+                        "Blocking COX",
+                        "Inhibiting thrombin",
+                        "Blocking fibrin formation"
+                    ],
+                    correct: 0
+                },
+                {
+                    question: "Warfarin inhibits synthesis of:",
+                    options: [
+                        "Vitamin K-dependent clotting factors",
+                        "Platelet factors",
+                        "Fibrinogen",
+                        "Factor XII"
+                    ],
+                    correct: 0
+                },
+                {
+                    question: "Heparin acts by:",
+                    options: [
+                        "Direct thrombin inhibition",
+                        "Activating antithrombin III",
+                        "Blocking vitamin K",
+                        "Blocking fibrin degradation"
+                    ],
+                    correct: 1
+                },
+                {
+                    question: "Alteplase (tPA) is used in acute MI because it:",
+                    options: [
+                        "Inhibits clotting factors",
+                        "Converts plasminogen to plasmin",
+                        "Blocks platelets",
+                        "Antagonizes fibrinogen"
+                    ],
+                    correct: 1
+                },
+                {
+                    question: "Tranexamic acid is used because it:",
+                    options: [
+                        "Stimulates fibrinolysis",
+                        "Inhibits fibrinolysis",
+                        "Blocks platelets",
+                        "Acts as an anticoagulant"
+                    ],
                     correct: 1
                 }
             ]
         };
+
 
         let currentUser = {};
         let currentQuestions = [];
@@ -717,6 +1142,10 @@
             // Hide warning if shown
             document.getElementById('warning-message').classList.add('hidden');
 
+            // --- MODIFICATION: Show loading overlay ---
+            document.getElementById('loading-overlay').classList.remove('hidden');
+            document.querySelector('.container').classList.add('no-click');
+
             // Calculate grade
             let correctAnswers = 0;
             const userAnswers = [];
@@ -741,30 +1170,43 @@
         }
 
         function submitToGoogleSheets(grade) {
+            // --- MODIFICATION: Helper function to hide loading and show results ---
+            const hideLoadingAndShowResults = () => {
+                document.getElementById('loading-overlay').classList.add('hidden');
+                document.querySelector('.container').classList.remove('no-click');
+                showSuccessMessage(grade);
+            };
+
+            if (!currentUser || !currentUser.name) {
+                console.error('currentUser is not ready');
+                return;
+            }
+
             const submissionData = {
-                name: currentUser.name,
-                grade: grade.toString(),
-                level: currentUser.level,
-                phone: currentUser.phone,
-                email: currentUser.email
+                name: currentUser.name || "a",
+                grade: grade?.toString() || "a",
+                level: currentUser.level || "a",
+                phone: currentUser.phone || "a",
+                email: currentUser.email || "a"
             };
 
             fetch("https://script.google.com/macros/s/AKfycbyqcSlexJ6_gvvYLv-tXH67qyLz3Dm2vOjvihNyiZOadmRaRLTjP2hotwjf49N9Oj33vw/exec", {
+                // Using text/plain to avoid CORS preflight issues
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
+                headers: { "Content-Type": "text/plain;charset=utf-8" },
                 body: JSON.stringify(submissionData)
             })
                 .then(res => res.json())
                 .then(data => {
                     console.log('Submission successful:', data);
-                    showSuccessMessage(grade);
+                    hideLoadingAndShowResults(); // Hide loading and proceed
                 })
                 .catch(error => {
                     console.error('Submission error:', error);
-                    // Still show success message even if API fails
-                    showSuccessMessage(grade);
+                    hideLoadingAndShowResults(); // Hide loading and proceed even on error
                 });
         }
+
 
         function showSuccessMessage(grade) {
             document.getElementById('exam-section').classList.add('hidden');
