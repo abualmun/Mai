@@ -30,18 +30,81 @@
         .header {
             text-align: center;
             margin-bottom: 30px;
-            padding: 20px;
+            padding: 30px 20px;
             background: rgba(255, 255, 255, 0.1);
             border-radius: 15px;
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.2);
         }
 
+        .logo-container {
+            margin-bottom: 20px;
+        }
+
+        .logo {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #4A90E2 0%, #FFFFFF 100%);
+            border-radius: 50%;
+            margin: 0 auto 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            font-weight: bold;
+            color: #FFFF;
+            box-shadow: 0 8px 25px rgba(74, 144, 226, 0.3);
+            border: 3px solid rgba(255, 255, 255, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .logo::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(45deg, #4A90E2, #0F4C4F, #4A90E2);
+            border-radius: 50%;
+            z-index: -1;
+            animation: rotate 3s linear infinite;
+        }
+
+        @keyframes rotate {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .academy-name {
+            color: #FFFFFF;
+            margin-bottom: 5px;
+            font-size: 2.2rem;
+            font-weight: 700;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            letter-spacing: 1px;
+        }
+
+        .academy-subtitle {
+            color: #F0F0F0;
+            font-size: 1rem;
+            font-weight: 300;
+            margin-bottom: 15px;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
+        }
+
         .header h1 {
             color: #FFFFFF;
             margin-bottom: 10px;
-            font-size: 2.5rem;
+            font-size: 1.8rem;
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            font-weight: 600;
         }
 
         .form-section {
@@ -378,6 +441,20 @@
             .timer {
                 font-size: 1.2rem;
             }
+
+            .logo {
+                width: 60px;
+                height: 60px;
+                font-size: 1.5rem;
+            }
+
+            .academy-name {
+                font-size: 1.5rem;
+            }
+
+            .header h1 {
+                font-size: 1.5rem;
+            }
         }
     </style>
 </head>
@@ -385,7 +462,14 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>Academy MCQ Test Platform</h1>
+            <div class="logo-container">
+                <div class="logo">
+                    <img src="logo.png" alt="Dr.T Logo" style="height:60px;">
+                </div>
+                <div class="academy-name">Dr. Mohamed Thabit Academy</div>
+                <div class="academy-subtitle">Interactive & Enjoyable Medical Education</div>
+            </div>
+            <h1>MCQ Test Platform</h1>
             <p>Test your knowledge with our comprehensive assessment system</p>
         </div>
 
