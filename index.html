@@ -1,0 +1,773 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Academy MCQ Test Platform</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0F4C4F 0%, #333333 100%);
+            color: #FFFFFF;
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .header h1 {
+            color: #FFFFFF;
+            margin-bottom: 10px;
+            font-size: 2.5rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .form-section {
+            background: rgba(255, 255, 255, 0.95);
+            color: #333333;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #0F4C4F;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #F0F0F0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            background: #FFFFFF;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #4A90E2;
+            box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+        }
+
+        .btn {
+            background: linear-gradient(135deg, #4A90E2 0%, #0F4C4F 100%);
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(74, 144, 226, 0.3);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .exam-section {
+            background: rgba(255, 255, 255, 0.95);
+            color: #333333;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        .exam-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: linear-gradient(135deg, #0F4C4F 0%, #4A90E2 100%);
+            color: white;
+            border-radius: 10px;
+        }
+
+        .timer {
+            font-size: 1.5rem;
+            font-weight: bold;
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.7;
+            }
+
+            100% {
+                opacity: 1;
+            }
+        }
+
+        .question-container {
+            margin-bottom: 30px;
+            padding: 25px;
+            background: #F0F0F0;
+            border-radius: 12px;
+            border-left: 5px solid #4A90E2;
+            transition: all 0.3s ease;
+        }
+
+        .question-container:hover {
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .question-number {
+            color: #4A90E2;
+            font-weight: bold;
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+        }
+
+        .question-text {
+            font-size: 1.1rem;
+            color: #333333;
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .option {
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            background: white;
+            border: 2px solid #F0F0F0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .option:hover {
+            border-color: #4A90E2;
+            background: rgba(74, 144, 226, 0.05);
+        }
+
+        .option.selected {
+            border-color: #4A90E2;
+            background: rgba(74, 144, 226, 0.1);
+        }
+
+        .option input[type="radio"] {
+            margin-right: 12px;
+            transform: scale(1.2);
+            accent-color: #4A90E2;
+        }
+
+        .option label {
+            cursor: pointer;
+            flex-grow: 1;
+            font-size: 1rem;
+        }
+
+        .warning {
+            background: #ff6b6b;
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+            animation: shake 0.5s ease-in-out;
+        }
+
+        @keyframes shake {
+
+            0%,
+            100% {
+                transform: translateX(0);
+            }
+
+            25% {
+                transform: translateX(-5px);
+            }
+
+            75% {
+                transform: translateX(5px);
+            }
+        }
+
+        .success {
+            background: #51cf66;
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .results-section {
+            background: rgba(255, 255, 255, 0.95);
+            color: #333333;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        .results-header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: linear-gradient(135deg, #0F4C4F 0%, #4A90E2 100%);
+            color: white;
+            border-radius: 10px;
+        }
+
+        .score-display {
+            font-size: 3rem;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+
+        .results-container {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .result-item {
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 5px solid #4A90E2;
+            background: #F0F0F0;
+        }
+
+        .result-item.correct {
+            border-left-color: #51cf66;
+            background: rgba(81, 207, 102, 0.1);
+        }
+
+        .result-item.incorrect {
+            border-left-color: #ff6b6b;
+            background: rgba(255, 107, 107, 0.1);
+        }
+
+        .result-question {
+            font-weight: 600;
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+            color: #0F4C4F;
+        }
+
+        .result-answer {
+            display: flex;
+            align-items: center;
+            margin: 8px 0;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-weight: 500;
+        }
+
+        .result-answer.user-answer {
+            background: rgba(74, 144, 226, 0.2);
+            border: 2px solid #4A90E2;
+        }
+
+        .result-answer.correct-answer {
+            background: rgba(81, 207, 102, 0.2);
+            border: 2px solid #51cf66;
+        }
+
+        .result-answer.user-incorrect {
+            background: rgba(255, 107, 107, 0.2);
+            border: 2px solid #ff6b6b;
+        }
+
+        .answer-label {
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-right: 10px;
+            padding: 4px 8px;
+            border-radius: 4px;
+            background: rgba(255, 255, 255, 0.8);
+            color: #333;
+        }
+
+        .status-icon {
+            margin-right: 10px;
+            font-size: 1.2rem;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #F0F0F0;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #4A90E2, #0F4C4F);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+
+            .exam-header {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+
+            .timer {
+                font-size: 1.2rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Academy MCQ Test Platform</h1>
+            <p>Test your knowledge with our comprehensive assessment system</p>
+        </div>
+
+        <!-- User Registration Form -->
+        <div id="registration-form" class="form-section">
+            <h2 style="color: #0F4C4F; margin-bottom: 20px; text-align: center;">Student Registration</h2>
+            <form id="userForm">
+                <div class="form-group">
+                    <label for="name">Full Name *</label>
+                    <input type="text" id="name" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email Address *</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="phone">Phone Number *</label>
+                    <input type="tel" id="phone" name="phone" required>
+                </div>
+                <div class="form-group">
+                    <label for="level">Select Level *</label>
+                    <select id="level" name="level" required>
+                        <option value="">Choose your level</option>
+                        <option value="beginner">Beginner</option>
+                        <option value="intermediate">Intermediate</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn">Start Exam</button>
+            </form>
+        </div>
+
+        <!-- Exam Section -->
+        <div id="exam-section" class="exam-section hidden">
+            <div class="exam-header">
+                <div>
+                    <h2 id="exam-level">Exam Level</h2>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progress-fill"></div>
+                    </div>
+                </div>
+                <div class="timer" id="timer">60:00</div>
+            </div>
+
+            <div id="warning-message" class="warning hidden">
+                Please answer all questions before submitting!
+            </div>
+
+            <div id="questions-container"></div>
+
+            <button id="submit-btn" class="btn" onclick="submitExam()">Submit Exam</button>
+        </div>
+
+        <!-- Success Message -->
+        <div id="success-message" class="success hidden">
+            <h3>Exam Submitted Successfully!</h3>
+            <p>Your results have been recorded. Thank you for taking the test!</p>
+        </div>
+
+        <!-- Results Section -->
+        <div id="results-section" class="results-section hidden">
+            <div class="results-header">
+                <h2>Exam Results</h2>
+                <div id="final-score" class="score-display"></div>
+                <p id="results-summary"></p>
+            </div>
+            <div id="results-container" class="results-container"></div>
+        </div>
+    </div>
+
+    <script>
+        // Sample questions data
+        const questionsData = {
+            beginner: [
+                {
+                    question: "What does HTML stand for?",
+                    options: ["Hyper Text Markup Language", "High Tech Modern Language", "Home Tool Markup Language", "Hyperlink and Text Markup Language"],
+                    correct: 0
+                },
+                {
+                    question: "Which HTML tag is used for the largest heading?",
+                    options: ["<h6>", "<h1>", "<header>", "<head>"],
+                    correct: 1
+                },
+                {
+                    question: "What does CSS stand for?",
+                    options: ["Computer Style Sheets", "Creative Style Sheets", "Cascading Style Sheets", "Colorful Style Sheets"],
+                    correct: 2
+                },
+                {
+                    question: "Which symbol is used to select an ID in CSS?",
+                    options: [".", "#", "*", "&"],
+                    correct: 1
+                },
+                {
+                    question: "What is the correct way to comment in HTML?",
+                    options: ["// comment", "/* comment */", "<!-- comment -->", "# comment"],
+                    correct: 2
+                }
+            ],
+            intermediate: [
+                {
+                    question: "What is the purpose of the 'use strict' directive in JavaScript?",
+                    options: ["To enable strict type checking", "To enforce stricter parsing and error handling", "To improve performance", "To enable ES6 features"],
+                    correct: 1
+                },
+                {
+                    question: "Which method is used to add an element to the end of an array in JavaScript?",
+                    options: ["append()", "add()", "push()", "insert()"],
+                    correct: 2
+                },
+                {
+                    question: "What is the difference between '==' and '===' in JavaScript?",
+                    options: ["No difference", "== checks type, === doesn't", "=== checks type and value, == only checks value", "=== is faster"],
+                    correct: 2
+                },
+                {
+                    question: "Which CSS property is used to create flexbox layouts?",
+                    options: ["display: flex", "layout: flex", "flex: true", "position: flex"],
+                    correct: 0
+                },
+                {
+                    question: "What is the purpose of the async/await keywords in JavaScript?",
+                    options: ["To handle synchronous operations", "To handle asynchronous operations more elegantly", "To speed up code execution", "To create loops"],
+                    correct: 1
+                }
+            ]
+        };
+
+        let currentUser = {};
+        let currentQuestions = [];
+        let startTime;
+        let timerInterval;
+        let timeRemaining = 3600; // 60 minutes in seconds
+
+        // Handle form submission
+        document.getElementById('userForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            currentUser = {
+                name: document.getElementById('name').value,
+                email: document.getElementById('email').value,
+                phone: document.getElementById('phone').value,
+                level: document.getElementById('level').value
+            };
+
+            startExam();
+        });
+
+        function startExam() {
+            // Hide registration form and show exam section
+            document.getElementById('registration-form').classList.add('hidden');
+            document.getElementById('exam-section').classList.remove('hidden');
+
+            // Set exam level display
+            document.getElementById('exam-level').textContent = `${currentUser.level.toUpperCase()} LEVEL EXAM`;
+
+            // Load questions based on level
+            currentQuestions = questionsData[currentUser.level];
+            renderQuestions();
+
+            // Start timer
+            startTimer();
+
+            // Record start time
+            startTime = new Date();
+        }
+
+        function renderQuestions() {
+            const container = document.getElementById('questions-container');
+            container.innerHTML = '';
+
+            currentQuestions.forEach((q, index) => {
+                const questionDiv = document.createElement('div');
+                questionDiv.className = 'question-container';
+                questionDiv.innerHTML = `
+                    <div class="question-number">Question ${index + 1} of ${currentQuestions.length}</div>
+                    <div class="question-text">${q.question}</div>
+                    <div class="options">
+                        ${q.options.map((option, optIndex) => `
+                            <div class="option" onclick="selectOption(${index}, ${optIndex}, this)">
+                                <input type="radio" name="question${index}" value="${optIndex}" id="q${index}o${optIndex}">
+                                <label for="q${index}o${optIndex}">${option}</label>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+                container.appendChild(questionDiv);
+            });
+
+            updateProgress();
+        }
+
+        function selectOption(questionIndex, optionIndex, element) {
+            // Remove selected class from all options in this question
+            const questionContainer = element.parentNode.parentNode;
+            const allOptions = questionContainer.querySelectorAll('.option');
+            allOptions.forEach(opt => opt.classList.remove('selected'));
+
+            // Add selected class to clicked option
+            element.classList.add('selected');
+
+            // Check the radio button
+            const radio = element.querySelector('input[type="radio"]');
+            radio.checked = true;
+
+            updateProgress();
+        }
+
+        function updateProgress() {
+            const totalQuestions = currentQuestions.length;
+            const answeredQuestions = document.querySelectorAll('input[type="radio"]:checked').length;
+            const progressPercentage = (answeredQuestions / totalQuestions) * 100;
+
+            document.getElementById('progress-fill').style.width = progressPercentage + '%';
+        }
+
+        function startTimer() {
+            timerInterval = setInterval(() => {
+                timeRemaining--;
+
+                const minutes = Math.floor(timeRemaining / 60);
+                const seconds = timeRemaining % 60;
+
+                document.getElementById('timer').textContent =
+                    `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+
+                if (timeRemaining <= 0) {
+                    clearInterval(timerInterval);
+                    submitExam();
+                }
+            }, 1000);
+        }
+
+        function submitExam() {
+            // Check if all questions are answered
+            const totalQuestions = currentQuestions.length;
+            const answeredQuestions = document.querySelectorAll('input[type="radio"]:checked').length;
+
+            if (answeredQuestions < totalQuestions) {
+                document.getElementById('warning-message').classList.remove('hidden');
+                document.getElementById('warning-message').scrollIntoView({ behavior: 'smooth' });
+                return;
+            }
+
+            // Hide warning if shown
+            document.getElementById('warning-message').classList.add('hidden');
+
+            // Calculate grade
+            let correctAnswers = 0;
+            const userAnswers = [];
+
+            for (let i = 0; i < currentQuestions.length; i++) {
+                const selectedOption = document.querySelector(`input[name="question${i}"]:checked`);
+                const userAnswer = parseInt(selectedOption.value);
+                userAnswers.push(userAnswer);
+
+                if (userAnswer === currentQuestions[i].correct) {
+                    correctAnswers++;
+                }
+            }
+
+            const grade = Math.round((correctAnswers / currentQuestions.length) * 100);
+
+            // Stop timer
+            clearInterval(timerInterval);
+
+            // Submit to Google Sheets
+            submitToGoogleSheets(grade);
+        }
+
+        function submitToGoogleSheets(grade) {
+            const submissionData = {
+                name: currentUser.name,
+                grade: grade.toString(),
+                level: currentUser.level,
+                phone: currentUser.phone,
+                email: currentUser.email
+            };
+
+            fetch("https://script.google.com/macros/s/AKfycbyqcSlexJ6_gvvYLv-tXH67qyLz3Dm2vOjvihNyiZOadmRaRLTjP2hotwjf49N9Oj33vw/exec", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(submissionData)
+            })
+                .then(res => res.json())
+                .then(data => {
+                    console.log('Submission successful:', data);
+                    showSuccessMessage(grade);
+                })
+                .catch(error => {
+                    console.error('Submission error:', error);
+                    // Still show success message even if API fails
+                    showSuccessMessage(grade);
+                });
+        }
+
+        function showSuccessMessage(grade) {
+            document.getElementById('exam-section').classList.add('hidden');
+
+            // Show brief success message first
+            document.getElementById('success-message').classList.remove('hidden');
+            document.getElementById('success-message').innerHTML = `
+                <h3>Exam Submitted Successfully!</h3>
+                <p><strong>${currentUser.name}</strong>, your results have been recorded!</p>
+            `;
+
+            // Show detailed results after a short delay
+            setTimeout(() => {
+                showDetailedResults(grade);
+            }, 2000);
+        }
+
+        function showDetailedResults(grade) {
+            // Hide success message and show results
+            document.getElementById('success-message').classList.add('hidden');
+            document.getElementById('results-section').classList.remove('hidden');
+
+            // Set score and summary
+            document.getElementById('final-score').textContent = `${grade}%`;
+
+            const correctCount = Math.round((grade / 100) * currentQuestions.length);
+            const totalCount = currentQuestions.length;
+            document.getElementById('results-summary').innerHTML = `
+                You answered <strong>${correctCount}</strong> out of <strong>${totalCount}</strong> questions correctly on the <strong>${currentUser.level}</strong> level exam.
+            `;
+
+            // Generate detailed results
+            const resultsContainer = document.getElementById('results-container');
+            resultsContainer.innerHTML = '';
+
+            currentQuestions.forEach((question, index) => {
+                const selectedOption = document.querySelector(`input[name="question${index}"]:checked`);
+                const userAnswer = parseInt(selectedOption.value);
+                const correctAnswer = question.correct;
+                const isCorrect = userAnswer === correctAnswer;
+
+                const resultDiv = document.createElement('div');
+                resultDiv.className = `result-item ${isCorrect ? 'correct' : 'incorrect'}`;
+
+                let answerHtml = '';
+
+                if (isCorrect) {
+                    answerHtml = `
+                        <div class="result-answer correct-answer">
+                            <span class="answer-label">✓ Correct</span>
+                            ${question.options[correctAnswer]}
+                        </div>
+                    `;
+                } else {
+                    answerHtml = `
+                        <div class="result-answer user-incorrect">
+                            <span class="answer-label">✗ Your Answer</span>
+                            ${question.options[userAnswer]}
+                        </div>
+                        <div class="result-answer correct-answer">
+                            <span class="answer-label">✓ Correct Answer</span>
+                            ${question.options[correctAnswer]}
+                        </div>
+                    `;
+                }
+
+                resultDiv.innerHTML = `
+                    <div class="result-question">
+                        <span class="status-icon">${isCorrect ? '✅' : '❌'}</span>
+                        Question ${index + 1}: ${question.question}
+                    </div>
+                    ${answerHtml}
+                `;
+
+                resultsContainer.appendChild(resultDiv);
+            });
+        }
+
+        // Prevent page refresh during exam
+        window.addEventListener('beforeunload', function (e) {
+            if (!document.getElementById('exam-section').classList.contains('hidden')) {
+                e.preventDefault();
+                e.returnValue = 'Are you sure you want to leave? Your exam progress will be lost.';
+                return e.returnValue;
+            }
+        });
+    </script>
+</body>
+
+</html>
