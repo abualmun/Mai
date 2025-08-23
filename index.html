@@ -553,7 +553,8 @@
                         <option value="intermediate">Intermediate</option>
                     </select>
                 </div>
-                <button type="submit" class="btn">Start Exam</button>
+                <!-- === FIX APPLIED HERE === -->
+                <button type="button" id="startBtn" class="btn">Start Exam</button>
             </form>
         </div>
 
@@ -1029,8 +1030,19 @@
         let timerInterval;
         let timeRemaining = 3600; // 60 minutes in seconds
 
-        // Handle form submission
-        document.getElementById('userForm').addEventListener('submit', function (e) {
+        // === FIX APPLIED HERE ===
+        // Handle start button click instead of form submission to prevent page reload
+        document.getElementById('startBtn').addEventListener('click', function (e) {
+            const userForm = document.getElementById('userForm');
+
+            // Manually check validity since we are not using a submit button
+            if (!userForm.checkValidity()) {
+                // This will trigger the browser's built-in validation messages
+                userForm.reportValidity();
+                return;
+            }
+
+            // Prevent any default behavior just in case
             e.preventDefault();
 
             currentUser = {
@@ -1042,6 +1054,7 @@
 
             startExam();
         });
+
 
         function startExam() {
             // Hide registration form and show exam section
